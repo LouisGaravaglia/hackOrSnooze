@@ -77,20 +77,39 @@ $(async function() {
     $submitForm.show();
   })
 
-  // $storyBtn.on("click", function() {
-  //   const $author = $("#author").val();
-  //   const $title = $("#title").val();
-  //   const $url = $("#url").val();
+  //TODO:
+  $storyBtn.on("click", async function(evt) {
 
-  //   //TODO: get a hold of values to send to API.
-  //   const storyListInstance = await StoryList.addStory();
 
-  //   //refresh the stories to show the added story
-  //   generateStories();
+    const $author = $("#author").val();
+    const $title = $("#title").val();
+    const $url = $("#url").val();
+    const username = currentUser.username;
+    const hostName = getHostName($url);
+
+    const storyObject = await storyList.addStory(currentUser, {title, author, url, username  });
+
+    const $li = $(`
+    <li id="${storyObject.storyId}" class="id-${storyObject.storyId}">
+    <span class="start">
+      <i class="far fa-star"></i>
+    </span>  
+    <a class="article-link" href="${$url}" target="a_blank">
+        <strong>${$title}</strong>
+      </a>
+      <small class="article-author">by ${$author}</small>
+      <small class="article-hostname ${hostName}">(${hostName})</small>
+      <small class="article-username">posted by ${username}</small>
+    </li>
+  `);
+
+  $allStoriesList.prepend($li);
+
     
-  //   $allStoriesList.show();
-  //   $submitForm.hide();
-  // })
+    $allStoriesList.show();
+    $submitForm.slideUp("slow");
+    $submitForm.trigger("reset");
+  })
 
   /**
    * Event Handler for Clicking Login
@@ -98,8 +117,7 @@ $(async function() {
 
   $navLogin.on("click", function() {
     // Show the Login and Create Account Forms
-    localStorage.setItem("token", "");
-    const username = localStorage.setItem("username", "");
+
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
