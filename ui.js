@@ -8,8 +8,9 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
-  // const $navSubmit = $("#nav-create-story")
-  // const $submitForm = $("#submit-form");
+  const $navSubmit = $("#nav-create-story");
+  const $storyBtn = $("#story-submit-btn");
+ 
 
   // global storyList variable
   let storyList = null;
@@ -71,10 +72,61 @@ $(async function() {
   });
 
 
-  // $navSubmit.on("click", function() {
-  //   $allStoriesList.hide();
-  //   $submitForm.show();
-  // })
+  $navSubmit.on("click", function() {
+    $allStoriesList.hide();
+    $submitForm.show();
+  })
+
+  //TODO:
+  // $storyBtn.on("click", async function(evt) {
+
+
+  //   const $author = $("#author").val();
+  //   const $title = $("#title").val();
+  //   const $url = $("#url").val();
+  //   const username = currentUser.username;
+  //   const hostName = getHostName($url);
+
+  //   const storyObject = await storyList.addStory(currentUser, {title, author, url, username  });
+
+  $submitForm.on("submit", async function(evt) {
+    evt.preventDefault(); // no page refresh
+
+    // grab all the info from the form
+    const title = $("#title").val();
+    const url = $("#url").val();
+    const hostName = getHostName(url);
+    const author = $("#author").val();
+    const username = currentUser.username
+
+    const storyObject = await storyList.addStory(currentUser, {
+      title,
+      author,
+      url,
+      username
+    });
+
+    // generate markup for the new story
+    const $li = $(`
+      <li id="${storyObject.storyId}" class="id-${storyObject.storyId}">
+        <span class="star">
+          <i class="far fa-star"></i>
+        </span>
+        <a class="article-link" href="${url}" target="a_blank">
+          <strong>${title}</strong>
+        </a>
+        <small class="article-hostname ${hostName}">(${hostName})</small>
+        <small class="article-author">by ${author}</small>
+        <small class="article-username">posted by ${username}</small>
+      </li>
+    `);
+    $allStoriesList.prepend($li);
+
+    // hide the form and reset it
+    $submitForm.slideUp("slow");
+    $submitForm.trigger("reset");
+  });
+
 
   /**
    * Event Handler for Clicking Login
@@ -82,6 +134,7 @@ $(async function() {
 
   $navLogin.on("click", function() {
     // Show the Login and Create Account Forms
+
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
@@ -214,6 +267,10 @@ $(async function() {
     }
     return hostName;
   }
+
+
+  console.log(localStorage.getItem("token"));
+  console.log(localStorage.getItem("username"));
 
   /* sync current user information to localStorage */
 
