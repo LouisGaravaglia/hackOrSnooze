@@ -8,6 +8,8 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
+  // const $navSubmit = $("#nav-create-story")
+  // const $submitForm = $("#submit-form");
 
   // global storyList variable
   let storyList = null;
@@ -67,6 +69,12 @@ $(async function() {
     // refresh the page, clearing memory
     location.reload();
   });
+
+
+  // $navSubmit.on("click", function() {
+  //   $allStoriesList.hide();
+  //   $submitForm.show();
+  // })
 
   /**
    * Event Handler for Clicking Login
@@ -189,6 +197,7 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+    $navSubmit.show();
   }
 
   /* simple function to pull the hostname from a URL */
