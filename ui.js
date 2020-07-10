@@ -8,8 +8,9 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
-  // const $navSubmit = $("#nav-create-story")
-  // const $submitForm = $("#submit-form");
+  const $navSubmit = $("#nav-create-story");
+  const $storyBtn = $("#story-submit-btn");
+ 
 
   // global storyList variable
   let storyList = null;
@@ -71,9 +72,24 @@ $(async function() {
   });
 
 
-  // $navSubmit.on("click", function() {
-  //   $allStoriesList.hide();
-  //   $submitForm.show();
+  $navSubmit.on("click", function() {
+    $allStoriesList.hide();
+    $submitForm.show();
+  })
+
+  // $storyBtn.on("click", function() {
+  //   const $author = $("#author").val();
+  //   const $title = $("#title").val();
+  //   const $url = $("#url").val();
+
+  //   //TODO: get a hold of values to send to API.
+  //   const storyListInstance = await StoryList.addStory();
+
+  //   //refresh the stories to show the added story
+  //   generateStories();
+    
+  //   $allStoriesList.show();
+  //   $submitForm.hide();
   // })
 
   /**
@@ -82,6 +98,8 @@ $(async function() {
 
   $navLogin.on("click", function() {
     // Show the Login and Create Account Forms
+    localStorage.setItem("token", "");
+    const username = localStorage.setItem("username", "");
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
@@ -214,6 +232,10 @@ $(async function() {
     }
     return hostName;
   }
+
+
+  console.log(localStorage.getItem("token"));
+  console.log(localStorage.getItem("username"));
 
   /* sync current user information to localStorage */
 
