@@ -19,7 +19,7 @@ class StoryList {
    *  - returns the StoryList instance.*
    */
 
-  // Note the presence of `static` keyword: this indicates that getStories
+  // TODO: Note the presence of `static` keyword: this indicates that getStories
   // is **not** an instance method. Rather, it is a method that is called on the
   // class directly. Why doesn't it make sense for getStories to be an instance method?
 
@@ -27,7 +27,7 @@ class StoryList {
     // query the /stories endpoint (no auth required)
     const response = await axios.get(`${BASE_URL}/stories`);
 
-    // turn the plain old story objects from the API into instances of the Story class
+    // turn plain old story objects from API into instances of Story class
     const stories = response.data.stories.map(story => new Story(story));
 
     // build an instance of our own class using the new array of stories
@@ -43,7 +43,6 @@ class StoryList {
    * Returns the new story object
    */
 
-  //TODO:
   async addStory(user, newStory) {
     const response = await axios({
       method: "POST",
@@ -66,9 +65,31 @@ class StoryList {
     return newStory;
   }
 
+  /**
+   * Method to make a DELETE request to remove a particular story
+   *  and also update the StoryList
+   *
+   * - user: the current User instance
+   * - storyId: the ID of the story you want to remove
+   */
 
+  async removeStory(user, storyId) {
+    await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: {
+        token: user.loginToken
+      },
+    });
+
+    // filter out the story whose ID we are removing
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+    // do the same thing for the user's list of stories
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId
+    );
+  }
 }
-
 
 /**
  * The User class to primarily represent the current user.
@@ -97,21 +118,12 @@ class User {
    * - name: the user's full name
    */
 
-   //FIXME: Make a new function to get UserStories
-  static async getUserStories() {
-
-
-    return this.ownStories;
-
-  }
-
-
   static async create(username, password, name) {
     const response = await axios.post(`${BASE_URL}/signup`, {
       user: {
         username,
         password,
-        name
+        name,
       }
     });
 
@@ -134,7 +146,7 @@ class User {
     const response = await axios.post(`${BASE_URL}/login`, {
       user: {
         username,
-        password
+        password,
       }
     });
 
@@ -163,9 +175,7 @@ class User {
 
     // call the API
     const response = await axios.get(`${BASE_URL}/users/${username}`, {
-      params: {
-        token
-      }
+      params: {token}
     });
 
     // instantiate the user from the API information
@@ -177,7 +187,106 @@ class User {
     // instantiate Story instances for the user's favorites and ownStories
     existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
     existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
+
     return existingUser;
+  }
+
+  /**
+   * This function fetches user information from the API
+   *  at /users/{username} using a token. Then it sets all the
+   *  appropriate instance properties from the response with the current user instance.
+   */
+
+  async retrieveDetails() {
+    const response = await axios.get(`${BASE_URL}/users/${this.username}`, {
+      params: {
+        token: this.loginToken
+      }
+    });
+
+    // update all of the user's properties from the API response
+    this.name = response.data.user.name;
+    this.createdAt = response.data.user.createdAt;
+    this.updatedAt = response.data.user.updatedAt;
+
+    // remember to convert the user's favorites and ownStories into instances of Story
+    this.favorites = response.data.user.favorites.map(s => new Story(s));
+    this.ownStories = response.data.user.stories.map(s => new Story(s));
+
+    return this;
+  }
+
+  /**
+   * Add a story to the list of user favorites and update the API
+   * - storyId: an ID of a story to add to favorites
+   */
+
+  addFavorite(storyId) {
+    return this._toggleFavorite(storyId, "POST");
+  }
+
+  /**
+   * Remove a story to the list of user favorites and update the API
+   * - storyId: an ID of a story to remove from favorites
+   */
+
+  removeFavorite(storyId) {
+    return this._toggleFavorite(storyId, "DELETE");
+  }
+
+  /**
+   * A helper method to either POST or DELETE to the API
+   * - storyId: an ID of a story to remove from favorites
+   * - httpVerb: POST or DELETE based on adding or removing
+   */
+  async _toggleFavorite(storyId, httpVerb) {
+    await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
+      method: httpVerb,
+      data: {
+        token: this.loginToken
+      }
+    });
+
+    await this.retrieveDetails();
+    return this;
+  }
+
+  /**
+   * Send a PATCH request to the API in order to update the user
+   * - userData: the user properties you want to update
+   */
+
+  async update(userData) {
+    const response = await axios({
+      url: `${BASE_URL}/users/${this.username}`,
+      method: "PATCH",
+      data: {
+        user: userData,
+        token: this.loginToken
+      }
+    });
+
+    // "name" is really the only property you can update
+    this.name = response.data.user.name;
+
+    // Note: you can also update "password" but we're not storing it
+    return this;
+  }
+
+  /**
+   * Send a DELETE request to the API in order to remove the user
+   */
+
+  async remove() {
+    // this function is really just a wrapper around axios
+    await axios({
+      url: `${BASE_URL}/users/${this.username}`,
+      method: "DELETE",
+      data: {
+        token: this.loginToken
+      }
+    });
   }
 }
 
@@ -200,5 +309,33 @@ class Story {
     this.storyId = storyObj.storyId;
     this.createdAt = storyObj.createdAt;
     this.updatedAt = storyObj.updatedAt;
+  }
+
+  /**
+   * Make a PATCH request against /stories/{storyID} to update a single story
+   * - user: an instance of User
+   * - storyData: an object containing the properties you want to update
+   */
+
+  async update(user, storyData) {
+    const response = await axios({
+      url: `${BASE_URL}/stories/${this.storyId}`,
+      method: "PATCH",
+      data: {
+        token: user.loginToken,
+        story: storyData
+      }
+    });
+
+    const { author, title, url, updatedAt } = response.data.story;
+
+    // these are the only fields that you can change with a PATCH update
+    //  so we don't need to worry about updating the others
+    this.author = author;
+    this.title = title;
+    this.url = url;
+    this.updatedAt = updatedAt;
+
+    return this;
   }
 }
