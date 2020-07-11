@@ -9,7 +9,13 @@ $(async function() {
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
   const $navSubmit = $("#nav-create-story");
-  const $storyBtn = $("#story-submit-btn");
+  const $allAritcles = $("#all-articles-list");
+  const $favoriteArticles = $("#favorited-articles");
+  const $myArticles = $("#my-articles");
+  const $navWecome = $("#nav-welcome");
+  const $userProfile = $("#nav-user-profile");
+
+ 
  
 
   // global storyList variable
@@ -78,16 +84,6 @@ $(async function() {
   })
 
   //TODO:
-  // $storyBtn.on("click", async function(evt) {
-
-
-  //   const $author = $("#author").val();
-  //   const $title = $("#title").val();
-  //   const $url = $("#url").val();
-  //   const username = currentUser.username;
-  //   const hostName = getHostName($url);
-
-  //   const storyObject = await storyList.addStory(currentUser, {title, author, url, username  });
 
   $submitForm.on("submit", async function(evt) {
     evt.preventDefault(); // no page refresh
@@ -159,7 +155,7 @@ $(async function() {
     // let's see if we're logged in
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
-
+   
     // if there is a token in localStorage, call User.getLoggedInUser
     //  to get an instance of User with the right details
     //  this is designed to run once, on page load
@@ -168,6 +164,7 @@ $(async function() {
 
     if (currentUser) {
       showNavForLoggedInUser();
+      $userProfile.innerText = `${username}`;
     }
   }
 
@@ -211,6 +208,24 @@ $(async function() {
     }
   }
 
+
+  //FIXME: A FUNCTION TO RETRIEVE ONLY THE USER'S STORIES
+  async function generateMyStories() {
+    $myArticles.empty();
+
+    if(currentUser.ownStories.length === 0) {
+      $myArticles.append("<h5>No stories added by user yet!</h5>");
+    } else {
+      for (let story of currentUser.ownStories) {
+        let ownStoryHTML = generateStoryHTML(story, true);
+        $myArticles.append(ownStoryHTML);
+      }
+    }
+    $myArticles.show();
+    
+ 
+  }
+
   /**
    * A function to render HTML for an individual Story instance
    */
@@ -251,6 +266,7 @@ $(async function() {
     $navLogin.hide();
     $navLogOut.show();
     $navSubmit.show();
+    $navWecome.show();
   }
 
   /* simple function to pull the hostname from a URL */
