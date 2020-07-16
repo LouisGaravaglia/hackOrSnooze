@@ -35,8 +35,26 @@ class StoryList {
     return storyList;
   }
 
+  //FIXME:
+  async deleteStory(user, storyId) {
+    await axios({
+      method: "delete",
+      url: `${BASE_URL}/stories/${storyId}`,
+      data: {
+        token: user.loginToken,
+        }
+      })
+    
+      // filter out the story whose ID we are removing
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+    // do the same thing for the user's list of stories
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    
+  }
+
   /**
-   * TODO:
+   * 
    * 
    * Method to make a POST request to /stories and add the new story to the list
    * - user - the current instance of User who will post the story

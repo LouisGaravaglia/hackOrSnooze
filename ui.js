@@ -1,4 +1,4 @@
-$(async function() {
+$(async function () {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
@@ -12,7 +12,8 @@ $(async function() {
   const $mainNavLinks = $(".main-nav-links")
   const $hackOrSnooze = $("#nav-all")
   const $navMyStories = $("#nav-my-stories")
- 
+  const $deleteButton = $(".delete-btn")
+
 
   // global storyList variable
   let storyList = null;
@@ -28,7 +29,7 @@ $(async function() {
    *  If successfully we will setup the user instance
    */
 
-  $loginForm.on("submit", async function(evt) {
+  $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
     // grab the username and password
@@ -48,7 +49,7 @@ $(async function() {
    *  If successfully we will setup a new user instance
    */
 
-  $createAccountForm.on("submit", async function(evt) {
+  $createAccountForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
@@ -64,29 +65,42 @@ $(async function() {
   });
 
 
-    /** 
-     * 
+  /** 
+   * 
    * Event listener for submiting a story.
    */ //TODO: 
-  $submitForm.on("submit", async function(evt) {
+  $submitForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
     let author = $("#author").val();
     let title = $("#title").val();
     let url = $("#url").val();
-    const newStory = {author, title, url}
+    const newStory = {
+      author,
+      title,
+      url
+    }
     console.log(currentUser.username)
     console.log(currentUser.ownStories)
-    
+
     const res = await storyList.addStory(currentUser, newStory);
     await generateStories();
     $allStoriesList.slideToggle();
     $submitForm.slideToggle()
-  
 
 
-   
+
+
+  });
+
+  // ================================================================== USER SUBMITED STORIES ================================================================== //
+
+  //FIXME:
+  $navMyStories.on("click", function () {
+    hideElements();
+    generateUserStories();
+    $ownStories.slideToggle();
   });
 
 
@@ -100,36 +114,44 @@ $(async function() {
           <strong>${story.title}</strong>
         </a>
         <small class="article-author">by ${story.author}</small>
-      
         <small class="article-hostname ${hostName}">(${hostName})</small>
         <button class="delete-btn">delete</button>
         <small class="article-username">posted by ${story.username}</small>
-        
       </li>
     `);
 
     return storyMarkup;
   }
 
-//FIXME:
+  
   function generateUserStories() {
     $ownStories.empty();
-
-
-    // loop through all of our stories and generate HTML for them
+    // loop through all of user submitted stories and generate HTML for them
     for (let story of currentUser.ownStories) {
       const result = generateUserStoryHTML(story);
       $ownStories.append(result);
     }
-
   }
 
+//FIXME:
+  $ownStories.on("click", async function (e) {
+
+    storyId = e.target.parentElement.id;
+
+    await storyList.deleteStory(currentUser, storyId);
+    generateUserStories() 
+
+
+  })
+
+
+
+  // ================================================================== CLICK EVENTS ================================================================== //
 
   /**
    * Log Out Functionality
    */
-
-  $navLogOut.on("click", function() {
+  $navLogOut.on("click", function () {
     // empty out local storage
     localStorage.clear();
     // refresh the page, clearing memory
@@ -137,18 +159,13 @@ $(async function() {
   });
 
 
-  //FIXME:
-  $navMyStories.on("click", function() {
-    hideElements();
-    generateUserStories();
-    $ownStories.slideToggle();
-  });
+
 
   /**
    * Event Handler for Clicking Login
    */
 
-  $navLogin.on("click", function() {
+  $navLogin.on("click", function () {
     // Show the Login and Create Account Forms
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
@@ -159,23 +176,23 @@ $(async function() {
    * Event handler for Navigation to Homepage
    */
 
-  $("body").on("click", "#nav-all", async function() {
+  $("body").on("click", "#nav-all", async function () {
     hideElements();
     await generateStories();
     $allStoriesList.show();
   });
 
 
-  $navSubmit.on("click", function() {
+  $navSubmit.on("click", function () {
     hideElements();
     $submitForm.slideToggle();
   })
 
- 
-  $hackOrSnooze.on("click", function() {
+
+  $hackOrSnooze.on("click", function () {
     hideElements();
     $allStoriesList.show();
-  
+
   })
 
   /**
