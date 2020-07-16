@@ -8,8 +8,8 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
-  // const $navSubmit = $("#nav-create-story")
-  // const $submitForm = $("#submit-form");
+  const $navSubmit = $("#nav-create-story")
+ 
 
   // global storyList variable
   let storyList = null;
@@ -97,6 +97,12 @@ $(async function() {
     $allStoriesList.show();
   });
 
+
+  $navSubmit.on("click", function() {
+    $allStoriesList.hide();
+    $submitForm.show();
+  })
+
   /**
    * On page load, checks local storage to see if the user is already logged in.
    * Renders page information accordingly.
@@ -133,6 +139,9 @@ $(async function() {
 
     // show the stories
     $allStoriesList.show();
+
+    //show the navbar option to submit a story
+    $navSubmit.slideToggle();
 
     // update the navigation bar
     showNavForLoggedInUser();
