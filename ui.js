@@ -88,6 +88,29 @@ $(async function() {
 
    
   });
+
+
+  function generateUserStoryHTML(story) {
+    let hostName = getHostName(story.url);
+
+    // render story markup
+    const storyMarkup = $(`
+      <li id="${story.storyId}">
+        <a class="article-link" href="${story.url}" target="a_blank">
+          <strong>${story.title}</strong>
+        </a>
+        <small class="article-author">by ${story.author}</small>
+      
+        <small class="article-hostname ${hostName}">(${hostName})</small>
+        <button class="delete-btn">delete</button>
+        <small class="article-username">posted by ${story.username}</small>
+        
+      </li>
+    `);
+
+    return storyMarkup;
+  }
+
 //FIXME:
   function generateUserStories() {
     $ownStories.empty();
@@ -95,7 +118,7 @@ $(async function() {
 
     // loop through all of our stories and generate HTML for them
     for (let story of currentUser.ownStories) {
-      const result = generateStoryHTML(story);
+      const result = generateUserStoryHTML(story);
       $ownStories.append(result);
     }
 
