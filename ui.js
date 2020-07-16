@@ -8,7 +8,10 @@ $(async function() {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
-  const $navSubmit = $("#nav-create-story")
+  const $navSubmit = $("#nav-submit")
+  const $mainNavLinks = $(".main-nav-links")
+  const $hackOrSnooze = $("#nav-all")
+  const $navMyStories = $("#nav-my-stories")
  
 
   // global storyList variable
@@ -64,7 +67,7 @@ $(async function() {
     /** 
      * 
    * Event listener for submiting a story.
-   */
+   */ //TODO: 
   $submitForm.on("submit", async function(evt) {
     evt.preventDefault(); // no page refresh
 
@@ -73,15 +76,30 @@ $(async function() {
     let title = $("#title").val();
     let url = $("#url").val();
     const newStory = {author, title, url}
-
+    console.log(currentUser.username)
+    console.log(currentUser.ownStories)
     
     const res = await storyList.addStory(currentUser, newStory);
     await generateStories();
     $allStoriesList.slideToggle();
     $submitForm.slideToggle()
+  
+
 
    
   });
+//FIXME:
+  function generateUserStories() {
+    $ownStories.empty();
+
+
+    // loop through all of our stories and generate HTML for them
+    for (let story of currentUser.ownStories) {
+      const result = generateStoryHTML(story);
+      $ownStories.append(result);
+    }
+
+  }
 
 
   /**
@@ -96,10 +114,12 @@ $(async function() {
   });
 
 
-  // $navSubmit.on("click", function() {
-  //   $allStoriesList.hide();
-  //   $submitForm.show();
-  // })
+  //FIXME:
+  $navMyStories.on("click", function() {
+    hideElements();
+    generateUserStories();
+    $ownStories.slideToggle();
+  });
 
   /**
    * Event Handler for Clicking Login
@@ -124,8 +144,15 @@ $(async function() {
 
 
   $navSubmit.on("click", function() {
-    $allStoriesList.hide();
-    $submitForm.show();
+    hideElements();
+    $submitForm.slideToggle();
+  })
+
+ 
+  $hackOrSnooze.on("click", function() {
+    hideElements();
+    $allStoriesList.show();
+  
   })
 
   /**
@@ -164,9 +191,6 @@ $(async function() {
 
     // show the stories
     $allStoriesList.show();
-
-    //show the navbar option to submit a story
-    $navSubmit.slideToggle();
 
     // update the navigation bar
     showNavForLoggedInUser();
@@ -231,7 +255,7 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
-    $navSubmit.show();
+    $mainNavLinks.show();
   }
 
   /* simple function to pull the hostname from a URL */
