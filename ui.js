@@ -15,6 +15,7 @@ $(async function() {
   const $navSubmit = $("#nav-submit");
   const $userProfile = $("#user-profile");
 
+
   // global storyList variable
   let storyList = null;
 
@@ -64,6 +65,30 @@ $(async function() {
     syncCurrentUserToLocalStorage();
     loginAndSubmitForm();
   });
+
+
+    /** 
+     * 
+   * Event listener for submiting a story.
+   */
+  $submitForm.on("submit", async function(evt) {
+    evt.preventDefault(); // no page refresh
+
+    // grab the required fields
+    let author = $("#author").val();
+    let title = $("#title").val();
+    let url = $("#url").val();
+    const newStory = {author, title, url}
+
+    
+    const res = await storyList.addStory(currentUser, newStory);
+    await generateStories();
+    $allStoriesList.slideToggle();
+    $submitForm.slideToggle()
+
+   
+  });
+
 
   /**
    * Log Out Functionality
@@ -235,6 +260,12 @@ $(async function() {
     $allStoriesList.show();
   });
 
+
+  $navSubmit.on("click", function() {
+    $allStoriesList.hide();
+    $submitForm.show();
+  })
+
   /**
    * On page load, checks local storage to see if the user is already logged in.
    * Renders page information accordingly.
@@ -272,6 +303,9 @@ $(async function() {
 
     // show the stories
     $allStoriesList.show();
+
+    //show the navbar option to submit a story
+    $navSubmit.slideToggle();
 
     // update the navigation bar
     showNavForLoggedInUser();

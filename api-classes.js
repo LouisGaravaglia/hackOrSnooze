@@ -19,7 +19,7 @@ class StoryList {
    *  - returns the StoryList instance.*
    */
 
-  // TODO: Note the presence of `static` keyword: this indicates that getStories
+  // Note the presence of `static` keyword: this indicates that getStories
   // is **not** an instance method. Rather, it is a method that is called on the
   // class directly. Why doesn't it make sense for getStories to be an instance method?
 
@@ -36,14 +36,16 @@ class StoryList {
   }
 
   /**
+   * TODO:
+   * 
    * Method to make a POST request to /stories and add the new story to the list
    * - user - the current instance of User who will post the story
    * - newStory - a new story object for the API with title, author, and url
    *
    * Returns the new story object
    */
-
   async addStory(user, newStory) {
+<<<<<<< HEAD
     const response = await axios({
       method: "POST",
       url: `${BASE_URL}/stories`,
@@ -63,8 +65,31 @@ class StoryList {
     user.ownStories.unshift(newStory);
 
     return newStory;
+=======
+
+  const response = await axios({
+      method: "post",
+      url: `${BASE_URL}/stories`,
+      data: {
+        token: user.loginToken,
+        story: {
+        author: newStory.author,
+        title: newStory.title,
+       url: newStory.url
+        }
+      }
+    });
+      console.log(response);
+      console.log(`these are the stories: ${this.stories}`);
+    // TODO - Implement this functions!
+    // this function should return the newly created story so it can be used in
+    // the script.js file where it will be appended to the DOM
+  
+    return response;
+>>>>>>> secondTry
   }
 
+<<<<<<< HEAD
   /**
    * Method to make a DELETE request to remove a particular story
    *  and also update the StoryList
@@ -91,6 +116,8 @@ class StoryList {
   }
 }
 
+=======
+>>>>>>> secondTry
 /**
  * The User class to primarily represent the current user.
  *  There are helper methods to signup (create), login, and getLoggedInUser
@@ -127,6 +154,7 @@ class User {
       }
     });
 
+    console.log(response);
     // build a new User instance from the API response
     const newUser = new User(response.data.user);
 
@@ -310,6 +338,7 @@ class Story {
     this.createdAt = storyObj.createdAt;
     this.updatedAt = storyObj.updatedAt;
   }
+<<<<<<< HEAD
 
   /**
    * Make a PATCH request against /stories/{storyID} to update a single story
@@ -339,3 +368,25 @@ class Story {
     return this;
   }
 }
+=======
+}
+
+
+//USER INFO
+
+// token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvbzEyMzQ1IiwiaWF0IjoxNTk0OTE2NzE5fQ.hySxKWMbAkdNINBJl6he4nuSnl-k6C5fQqoUU8OUD6I"
+// ​​
+// user: {…}
+// ​​​
+// createdAt: "2020-07-16T16:25:19.327Z"
+// ​​​
+// favorites: Array []
+// ​​​
+// name: "foo12345"
+// ​​​
+// stories: Array []
+// ​​​
+// updatedAt: "2020-07-16T16:25:19.327Z"
+// ​​​
+// username: "foo12345"
+>>>>>>> secondTry
