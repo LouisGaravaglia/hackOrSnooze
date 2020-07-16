@@ -61,7 +61,7 @@ $(async function() {
   });
 
 
-    /** TODO: UPDATE SUBMIT FORM SO THE INFO GOES TO THE API
+    /** 
      * 
    * Event listener for submiting a story.
    */
@@ -74,7 +74,7 @@ $(async function() {
     let url = $("#url").val();
     const newStory = {author, title, url}
 
-    //FIXME: APPEND THE NEW STORY TO THE MAIN LIST SO I DONT NEED TO REFRESH
+    
     const res = await storyList.addStory(currentUser, newStory);
     await generateStories();
     $allStoriesList.slideToggle();
