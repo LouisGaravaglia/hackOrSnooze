@@ -74,7 +74,7 @@ $(async function () {
 
   })
 
-  //FIXME:
+  //TODO:  ADD FAVORITE STORY
   $allStoriesList.on("click", ".fa-star", function (e) {
     const target = e.target;
     const favoriteStories = currentUser.favorites
@@ -103,6 +103,30 @@ $(async function () {
         }
       }
     }    
+  })
+
+
+  //FIXME: REMOVE FAVORITE STORY
+  $favArticles.on("click", ".fa-star", function (e) {
+    const target = e.target;
+    const favoriteStories = currentUser.favorites
+    const targetId = target.parentElement.parentElement.id;
+    const idMemory = [];
+    console.log(target.parentElement.parentElement);
+    
+      $(this).toggleClass("far fas");
+
+      for (let i = 0; i < favoriteStories.length; i++) {
+        if (favoriteStories[i].storyId == targetId) {
+          idMemory.push(i);
+        }
+      }
+      
+      for (let i = idMemory.length - 1; i >= 0; i--) {
+        favoriteStories.splice(idMemory[i],1);
+      }
+
+    
   })
 
 
