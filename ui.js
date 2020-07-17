@@ -25,14 +25,14 @@ $(async function () {
   // global currentUser variable
   let currentUser = null;
 
-    /**
+  /**
    * Event listener for logging in.
    *  If successful we will setup the user instance
    */
   await checkIfLoggedIn();
 
 
-// ================================================================== CLICK EVENTS ================================================================== //
+  // ================================================================== CLICK EVENTS ================================================================== //
 
   /**
    * Log Out Functionality
@@ -74,24 +74,39 @@ $(async function () {
     $submitForm.slideToggle();
   })
 
-  
+
   $navFavorites.on("click", function () {
     hideElements();
+    showFavoriteStories()
     $favArticles.slideToggle();
   })
-//FIXME:
+
+  //FIXME:
   $allStoriesList.on("click", function (e) {
     target = e.target;
+    
+    
     if (!target.classList.contains("fa-star")) {
       return;
     }
+    targetId = target.parentElement.parentElement.id;
+
     if (target.classList.contains("add-favorite")) {
       target.classList.remove("add-favorite");
     } else {
       target.classList.add("add-favorite");
+      for (let story of storyList.stories) {
+        
+        if(story.storyId === targetId) currentUser.favorites.push(story);
+
+
+        // const result = generateStoryHTML(story);
+        // $favArticles.append(result);
+      }
+
     }
-   
-  })  
+    console.log(currentUser.favorites);
+  })
 
 
   $hackOrSnooze.on("click", function () {
@@ -101,50 +116,50 @@ $(async function () {
   })
 
 
-// ================================================================== SUBMIT EVENTS ================================================================== //
+  // ================================================================== SUBMIT EVENTS ================================================================== //
 
-$loginForm.on("submit", async function (evt) {
-  evt.preventDefault(); // no page-refresh on submit
+  $loginForm.on("submit", async function (evt) {
+    evt.preventDefault(); // no page-refresh on submit
 
-  // grab the username and password
-  const username = $("#login-username").val();
-  const password = $("#login-password").val();
+    // grab the username and password
+    const username = $("#login-username").val();
+    const password = $("#login-password").val();
 
-  // call the login static method to build a user instance
-  const userInstance = await User.login(username, password);
-  // set the global user to the user instance
-  currentUser = userInstance;
-  syncCurrentUserToLocalStorage();
-  loginAndSubmitForm();
-});
-
-
-/**
- * Event listener for signing up.
- *  If successfully we will setup a new user instance
- */
-
-$createAccountForm.on("submit", async function (evt) {
-  evt.preventDefault(); // no page refresh
-
-  // grab the required fields
-  let name = $("#create-account-name").val();
-  let username = $("#create-account-username").val();
-  let password = $("#create-account-password").val();
-
-  // call the create method, which calls the API and then builds a new user instance
-  const newUser = await User.create(username, password, name);
-  currentUser = newUser;
-  syncCurrentUserToLocalStorage();
-  loginAndSubmitForm();
-});
+    // call the login static method to build a user instance
+    const userInstance = await User.login(username, password);
+    // set the global user to the user instance
+    currentUser = userInstance;
+    syncCurrentUserToLocalStorage();
+    loginAndSubmitForm();
+  });
 
 
-      /** 
+  /**
+   * Event listener for signing up.
+   *  If successfully we will setup a new user instance
+   */
+
+  $createAccountForm.on("submit", async function (evt) {
+    evt.preventDefault(); // no page refresh
+
+    // grab the required fields
+    let name = $("#create-account-name").val();
+    let username = $("#create-account-username").val();
+    let password = $("#create-account-password").val();
+
+    // call the create method, which calls the API and then builds a new user instance
+    const newUser = await User.create(username, password, name);
+    currentUser = newUser;
+    syncCurrentUserToLocalStorage();
+    loginAndSubmitForm();
+  });
+
+
+  /** 
    * 
    * Event listener for submiting a story.
-   */ //TODO: 
-   $submitForm.on("submit", async function (evt) {
+   */
+  $submitForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
@@ -166,7 +181,7 @@ $createAccountForm.on("submit", async function (evt) {
     $allStoriesList.slideToggle();
     $submitForm.slideToggle();
 
-  });  
+  });
 
 
   $navMyStories.on("click", function () {
@@ -208,21 +223,21 @@ $createAccountForm.on("submit", async function (evt) {
     return storyMarkup;
   }
 
-  
+
 
   $ownStories.on("click", async function (e) {
     console.log(e);
     storyId = e.target.parentElement.parentElement.id;
 
     await storyList.deleteStory(currentUser, storyId);
-    generateUserStories() 
+    generateUserStories()
 
 
   });
 
 
 
-// ================================================================== DOM FUNCTIONS ================================================================== //
+  // ================================================================== DOM FUNCTIONS ================================================================== //
 
 
   /**
@@ -357,13 +372,17 @@ $createAccountForm.on("submit", async function (evt) {
 
 });
 
+//FIXME:
+async function showFavoriteStories() {
+  // get an instance of StoryList
+  const storyListInstance = await StoryList.getStories();
+  // update our global variable
+  storyList = storyListInstance;
 
-function showFavoriteStories() {
- // loop through all of our stories and generate HTML for them
- for (let story of storyList.stories) {
-  const result = generateStoryHTML(story);
-  $favArticles.append(result);
+  // loop through all of our stories and generate HTML for them
+  for (let story of storyList.stories) {
+    console.log(story);
+    // const result = generateStoryHTML(story);
+    // $favArticles.append(result);
+  }
 }
-}
-
-
