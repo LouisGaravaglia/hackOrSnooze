@@ -163,6 +163,10 @@ form > hr {
   color: rgb(199, 186, 1);
 }
 
+.add-favorite {
+  background-color: rgb(199, 186, 1);
+}
+
 .pencil:hover {
   color: darkblue;
 }

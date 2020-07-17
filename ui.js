@@ -74,16 +74,23 @@ $(async function () {
     $submitForm.slideToggle();
   })
 
-  //FIXME:
+  
   $navFavorites.on("click", function () {
     hideElements();
     $favArticles.slideToggle();
   })
-
+//FIXME:
   $allStoriesList.on("click", function (e) {
-    target = e.target.parentElement.parentElement;
-    console.log(target);
-    target.dataset.fav.toggle() = true;
+    target = e.target;
+    if (!target.classList.contains("fa-star")) {
+      return;
+    }
+    if (target.classList.contains("add-favorite")) {
+      target.classList.remove("add-favorite");
+    } else {
+      target.classList.add("add-favorite");
+    }
+   
   })  
 
 
