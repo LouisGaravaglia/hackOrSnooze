@@ -85,22 +85,30 @@ $(async function () {
 
     if (target.classList.contains("add-favorite")) {
       target.classList.remove("add-favorite");
-      console.log(currentUser.favorites);
+      
 
       for (let i = 0; i < currentUser.favorites.length; i++) {
       
         if(currentUser.favorites[i].storyId == targetId) currentUser.favorites.splice(i, 1);
         
       }
-      console.log(currentUser.favorites);
 
+      for (let i = 0; i < currentUser.favoriteIds.length; i++) {
+      
+        if(currentUser.favoriteIds[i] == targetId) currentUser.favoriteIds.splice(i, 1);
+        
+      }
+      
+      console.log(currentUser.favoriteIds);
 
     } else {
       target.classList.add("add-favorite");
       for (let story of storyList.stories) {
         
-        if(story.storyId === targetId) currentUser.favorites.push(story);
-
+        if(story.storyId === targetId) {
+          currentUser.favorites.push(story);
+          currentUser.favoriteIds.push(targetId);
+        }
 
         // const result = generateStoryHTML(story);
         // $favArticles.append(result);
@@ -291,9 +299,12 @@ $(async function () {
    *  which will generate a storyListInstance. Then render it.
    */
 
+   //FIXME:
   async function generateStories() {
     // get an instance of StoryList
     const storyListInstance = await StoryList.getStories();
+
+    
     // update our global variable
     storyList = storyListInstance;
     // empty out that part of the page
@@ -303,6 +314,7 @@ $(async function () {
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
       $allStoriesList.append(result);
+      console.log(story.storyId);
     }
   }
 
@@ -312,8 +324,10 @@ $(async function () {
 
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
-
-    // render story markup
+    const userFavorites = currentUser.favoriteIds;
+    
+   
+    
     const storyMarkup = $(`
       <li id="${story.storyId}">
       <p class="star"><i class="fas fa-star"></i></p>
@@ -325,6 +339,14 @@ $(async function () {
         <small class="article-username">posted by ${story.username}</small>
       </li>
     `);
+
+    const starIcon = storyMarkup[0].children[0];
+
+    for (const id of userFavorites) {
+      if(id === story.storyId) starIcon.classList.add("add-favorite");
+    }
+
+    
 
     return storyMarkup;
   }
