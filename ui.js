@@ -77,8 +77,9 @@ $(async function () {
 
   $navFavorites.on("click", function () {
     hideElements();
-    showFavoriteStories()
     $favArticles.slideToggle();
+    showFavoriteStories()
+    
   })
 
   //FIXME:
@@ -343,7 +344,8 @@ $(async function () {
       $filteredArticles,
       $ownStories,
       $loginForm,
-      $createAccountForm
+      $createAccountForm,
+      $favArticles
     ];
     elementsArr.forEach($elem => $elem.hide());
   }
@@ -378,13 +380,9 @@ $(async function () {
     }
   }
 
-
-
-});
-
 //FIXME:
 async function showFavoriteStories() {
-console.log(currentUser);
+  $favArticles.empty()
   // loop through all of our stories and generate HTML for them
   for (let story of currentUser.favorites) {
     const result = generateStoryHTML(story);
@@ -392,3 +390,6 @@ console.log(currentUser);
     console.log(currentUser.favorites);
   }
 }
+
+});
+
