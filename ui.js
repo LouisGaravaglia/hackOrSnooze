@@ -12,8 +12,9 @@ $(async function () {
   const $navSubmit = $("#nav-submit");
   const $mainNavLinks = $(".main-nav-links");
   const $hackOrSnooze = $("#nav-all");
-  const $myFavorites = $("#nav-favorites");
+  const $navFavorites = $("#nav-favorites");
   const $favArticles = $("#favorited-articles");
+  const $favStar = $(".fa-star");
 
 
 
@@ -74,10 +75,16 @@ $(async function () {
   })
 
   //FIXME:
-  $myFavorites.on("click", function () {
+  $navFavorites.on("click", function () {
     hideElements();
     $favArticles.slideToggle();
   })
+
+  $allStoriesList.on("click", function (e) {
+    target = e.target.parentElement.parentElement;
+    console.log(target);
+    target.dataset.fav.toggle() = true;
+  })  
 
 
   $hackOrSnooze.on("click", function () {
@@ -155,10 +162,6 @@ $createAccountForm.on("submit", async function (evt) {
   });  
 
 
-  // ================================================================== LOAD/DELETE USER STORIES ================================================================== //
-
-
-
   $navMyStories.on("click", function () {
     hideElements();
     generateUserStories();
@@ -166,6 +169,7 @@ $createAccountForm.on("submit", async function (evt) {
   });
 
 
+  // ================================================================== LOAD/DELETE USER STORIES ================================================================== //
 
 
 
@@ -345,5 +349,14 @@ $createAccountForm.on("submit", async function (evt) {
 
 
 });
+
+
+function showFavoriteStories() {
+ // loop through all of our stories and generate HTML for them
+ for (let story of storyList.stories) {
+  const result = generateStoryHTML(story);
+  $favArticles.append(result);
+}
+}
 
 
