@@ -81,11 +81,12 @@ $(async function () {
     // const favoriteStoryIds = currentUser.favoriteIds
     const targetId = target.parentElement.parentElement.id;
     const idMemory = [];
-    console.log("clicked");
+    
+    console.log(target);
 
-    if (!target.classList.contains("fa-star")) {
-      return;
-    }
+    // if (!target.classList.contains("fa-star")) {
+    //   return;
+    // }
     
 
     if (target.classList.contains("fas")) {
@@ -111,7 +112,7 @@ $(async function () {
 
     
 
-      generateStories();
+      // generateStories();
       // for (let i = 0; i < favoriteStoryIds.length; i++) {
 
       //   if (favoriteStoryIds[i] == targetId) favoriteStoryIds.splice(i, 1);
