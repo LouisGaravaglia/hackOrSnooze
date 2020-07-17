@@ -70,42 +70,59 @@ $(async function () {
     hideElements();
     $favArticles.slideToggle();
     showFavoriteStories()
-    
+
   })
 
   //FIXME:
   $allStoriesList.on("click", function (e) {
-    target = e.target;
-    
-    
+    const target = e.target;
+    const favoriteStories = currentUser.favorites
+    const favoriteStoryIds = currentUser.favoriteIds
+    const targetId = target.parentElement.parentElement.id;
+    const idMemory = [];
+
     if (!target.classList.contains("fa-star")) {
       return;
     }
-    targetId = target.parentElement.parentElement.id;
+    
 
     if (target.classList.contains("add-favorite")) {
       target.classList.remove("add-favorite");
-      
 
-      for (let i = 0; i < currentUser.favorites.length; i++) {
-      
-        if(currentUser.favorites[i].storyId == targetId) currentUser.favorites.splice(i, 1);
-        
-      }
 
-      for (let i = 0; i < currentUser.favoriteIds.length; i++) {
-      
-        if(currentUser.favoriteIds[i] == targetId) currentUser.favoriteIds.splice(i, 1);
-        
+      for (let i = 0; i < favoriteStories.length; i++) {
+
+        if (favoriteStories[i].storyId == targetId) {
+          idMemory.push(i);
+
+        }
+
       }
       
-      console.log(currentUser.favoriteIds);
+
+      for (let i = idMemory.length - 1; i >= 0; i--) {
+        favoriteStories.splice(idMemory[i],1);
+        favoriteStoryIds.splice(idMemory[i],1);
+      }
+
+      console.log("favoriteStories", favoriteStories);
+      console.log("favoriteStoryIds", favoriteStoryIds);
+
+
+      // for (let i = 0; i < favoriteStoryIds.length; i++) {
+
+      //   if (favoriteStoryIds[i] == targetId) favoriteStoryIds.splice(i, 1);
+
+
+      // }
+      // $favArticles.empty();
+      // showFavoriteStories()
 
     } else {
       target.classList.add("add-favorite");
       for (let story of storyList.stories) {
-        
-        if(story.storyId === targetId) {
+
+        if (story.storyId === targetId) {
           currentUser.favorites.push(story);
           currentUser.favoriteIds.push(targetId);
         }
@@ -115,6 +132,7 @@ $(async function () {
       }
 
     }
+
     
   })
 
@@ -184,8 +202,7 @@ $(async function () {
       title,
       url
     }
-    console.log(currentUser.username)
-    console.log("before adding story", currentUser.ownStories)
+
 
     const res = await storyList.addStory(currentUser, newStory);
 
@@ -239,7 +256,7 @@ $(async function () {
 
 
   $ownStories.on("click", async function (e) {
-    console.log(e);
+
     storyId = e.target.parentElement.parentElement.id;
 
     await storyList.deleteStory(currentUser, storyId);
@@ -299,12 +316,12 @@ $(async function () {
    *  which will generate a storyListInstance. Then render it.
    */
 
-   //FIXME:
+  //FIXME:
   async function generateStories() {
     // get an instance of StoryList
     const storyListInstance = await StoryList.getStories();
 
-    
+
     // update our global variable
     storyList = storyListInstance;
     // empty out that part of the page
@@ -314,7 +331,7 @@ $(async function () {
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
       $allStoriesList.append(result);
-      console.log(story.storyId);
+
     }
   }
 
@@ -325,9 +342,9 @@ $(async function () {
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
     const userFavorites = currentUser.favoriteIds;
-    
-   
-    
+
+
+
     const storyMarkup = $(`
       <li id="${story.storyId}">
       <p class="star"><i class="fas fa-star"></i></p>
@@ -343,10 +360,10 @@ $(async function () {
     const starIcon = storyMarkup[0].children[0];
 
     for (const id of userFavorites) {
-      if(id === story.storyId) starIcon.classList.add("add-favorite");
+      if (id === story.storyId) starIcon.classList.add("add-favorite");
     }
 
-    
+
 
     return storyMarkup;
   }
@@ -396,16 +413,16 @@ $(async function () {
     }
   }
 
-//FIXME:
-async function showFavoriteStories() {
-  $favArticles.empty()
-  // loop through all of our stories and generate HTML for them
-  for (let story of currentUser.favorites) {
-    const result = generateStoryHTML(story);
-    $favArticles.append(result);
-    console.log(currentUser.favorites);
+  //FIXME:
+  async function showFavoriteStories() {
+    $favArticles.empty()
+    // loop through all of our stories and generate HTML for them
+    console.log("showFavoriteStories", currentUser.favorites);
+    for (let story of currentUser.favorites) {
+      const result = generateStoryHTML(story);
+      $favArticles.append(result);
+
+    }
   }
-}
 
 });
-
