@@ -58,15 +58,6 @@ $(async function () {
     $allStoriesList.toggle();
   });
 
-  /**
-   * Event handler for Navigation to Homepage
-   */
-
-  $("body").on("click", "#nav-all", async function () {
-    hideElements();
-    await generateStories();
-    $allStoriesList.show();
-  });
 
 
   $navSubmit.on("click", function () {
@@ -120,11 +111,14 @@ $(async function () {
   })
 
 
-  $hackOrSnooze.on("click", function () {
+  $hackOrSnooze.on("click", async function () {
     hideElements();
+    await generateStories();
     $allStoriesList.show();
 
   })
+
+
 
 
   // ================================================================== SUBMIT EVENTS ================================================================== //
