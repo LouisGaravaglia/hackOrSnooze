@@ -78,68 +78,31 @@ $(async function () {
   $allStoriesList.on("click", ".fa-star", function (e) {
     const target = e.target;
     const favoriteStories = currentUser.favorites
-    // const favoriteStoryIds = currentUser.favoriteIds
     const targetId = target.parentElement.parentElement.id;
     const idMemory = [];
     
-    console.log(target);
-
-    // if (!target.classList.contains("fa-star")) {
-    //   return;
-    // }
-    
-
     if (target.classList.contains("fas")) {
-      // target.classList.remove("fas");
-      // target.classList.add("far");
       $(this).toggleClass("far fas");
-
 
       for (let i = 0; i < favoriteStories.length; i++) {
-
         if (favoriteStories[i].storyId == targetId) {
           idMemory.push(i);
-
         }
-
       }
       
-
       for (let i = idMemory.length - 1; i >= 0; i--) {
         favoriteStories.splice(idMemory[i],1);
-        // favoriteStoryIds.splice(idMemory[i],1);
       }
-
-    
-
-      // generateStories();
-      // for (let i = 0; i < favoriteStoryIds.length; i++) {
-
-      //   if (favoriteStoryIds[i] == targetId) favoriteStoryIds.splice(i, 1);
-
-
-      // }
-      // $favArticles.empty();
-      // showFavoriteStories()
 
     } else {
-      // target.classList.remove("far");
-      // target.classList.add("fas");
       $(this).toggleClass("far fas");
-      for (let story of storyList.stories) {
 
+      for (let story of storyList.stories) {
         if (story.storyId === targetId) {
           currentUser.favorites.push(story);
-          // currentUser.favoriteIds.push(targetId);
         }
-
-        // const result = generateStoryHTML(story);
-        // $favArticles.append(result);
       }
-
-    }
-
-    
+    }    
   })
 
 
