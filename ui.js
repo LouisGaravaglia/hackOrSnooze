@@ -93,6 +93,16 @@ $(async function () {
 
     if (target.classList.contains("add-favorite")) {
       target.classList.remove("add-favorite");
+      console.log(currentUser.favorites);
+
+      for (let i = 0; i < currentUser.favorites.length; i++) {
+      
+        if(currentUser.favorites[i].storyId == targetId) currentUser.favorites.splice(i, 1);
+        
+      }
+      console.log(currentUser.favorites);
+
+
     } else {
       target.classList.add("add-favorite");
       for (let story of storyList.stories) {
@@ -105,7 +115,7 @@ $(async function () {
       }
 
     }
-    console.log(currentUser.favorites);
+    
   })
 
 
@@ -374,15 +384,11 @@ $(async function () {
 
 //FIXME:
 async function showFavoriteStories() {
-  // get an instance of StoryList
-  const storyListInstance = await StoryList.getStories();
-  // update our global variable
-  storyList = storyListInstance;
-
+console.log(currentUser);
   // loop through all of our stories and generate HTML for them
-  for (let story of storyList.stories) {
-    console.log(story);
-    // const result = generateStoryHTML(story);
-    // $favArticles.append(result);
+  for (let story of currentUser.favorites) {
+    const result = generateStoryHTML(story);
+    $favArticles.append(result);
+    console.log(currentUser.favorites);
   }
 }
