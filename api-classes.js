@@ -76,13 +76,13 @@ class StoryList {
         }
       }
     });
-      console.log(response);
+      console.log("this is the response", response.data.story);
       console.log(`these are the stories: ${this.stories}`);
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
   
-    return response;
+    return response.data.story;
   }
 }
 

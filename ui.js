@@ -82,9 +82,12 @@ $(async function () {
       url
     }
     console.log(currentUser.username)
-    console.log(currentUser.ownStories)
+    console.log("before adding story", currentUser.ownStories)
 
     const res = await storyList.addStory(currentUser, newStory);
+
+    currentUser.ownStories.push(res);
+    console.log("after adding story", currentUser.ownStories)
     await generateStories();
     $allStoriesList.slideToggle();
     $submitForm.slideToggle()
