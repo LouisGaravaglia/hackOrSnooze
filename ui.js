@@ -112,6 +112,7 @@ $(async function () {
     const favoriteStories = currentUser.favorites
     const targetId = target.parentElement.parentElement.id;
     const idMemory = [];
+    const favStories = $favArticles[0].children;
     console.log(target.parentElement.parentElement);
     
       $(this).toggleClass("far fas");
@@ -126,7 +127,9 @@ $(async function () {
         favoriteStories.splice(idMemory[i],1);
       }
 
-    
+      generateFaves()
+
+     
   })
 
 
