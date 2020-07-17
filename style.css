@@ -153,13 +153,19 @@ form > hr {
   font-size: 0.75rem;
   margin: 0 2px;
   cursor: pointer;
+  font-size: 15px;
 }
+
 
 .trash-can:hover {
   color: crimson;
 }
 
 .star:hover {
+  color: rgb(90, 84, 0);
+}
+
+.add-favorite {
   color: rgb(199, 186, 1);
 }
 

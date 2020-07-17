@@ -35,7 +35,7 @@ class StoryList {
     return storyList;
   }
 
-  //FIXME:
+  
   async deleteStory(user, storyId) {
     await axios({
       method: "delete",
