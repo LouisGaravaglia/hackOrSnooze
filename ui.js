@@ -296,7 +296,7 @@ $createAccountForm.on("submit", async function (evt) {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      <p class="star"><i class="far fa-star"></i></p>
+      <p class="star"><i class="fas fa-star"></i></p>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>

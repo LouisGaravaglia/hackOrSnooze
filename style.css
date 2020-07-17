@@ -153,7 +153,9 @@ form > hr {
   font-size: 0.75rem;
   margin: 0 2px;
   cursor: pointer;
+  font-size: 15px;
 }
+
 
 .trash-can:hover {
   color: crimson;
@@ -164,7 +166,7 @@ form > hr {
 }
 
 .add-favorite {
-  background-color: rgb(199, 186, 1);
+  color: rgb(199, 186, 1);
 }
 
 .pencil:hover {
