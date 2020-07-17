@@ -101,7 +101,6 @@ class User {
     // these are all set to defaults, not passed in by the constructor
     this.loginToken = "";
     this.favorites = [];
-    this.favoriteIds = [];
     this.ownStories = [];
   }
 

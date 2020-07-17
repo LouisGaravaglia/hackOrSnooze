@@ -69,25 +69,29 @@ $(async function () {
   $navFavorites.on("click", function () {
     hideElements();
     $favArticles.slideToggle();
-    showFavoriteStories()
+    // showFavoriteStories()
+    generateFaves();
 
   })
 
   //FIXME:
-  $allStoriesList.on("click", function (e) {
+  $allStoriesList.on("click", ".fa-star", function (e) {
     const target = e.target;
     const favoriteStories = currentUser.favorites
-    const favoriteStoryIds = currentUser.favoriteIds
+    // const favoriteStoryIds = currentUser.favoriteIds
     const targetId = target.parentElement.parentElement.id;
     const idMemory = [];
+    console.log("clicked");
 
     if (!target.classList.contains("fa-star")) {
       return;
     }
     
 
-    if (target.classList.contains("add-favorite")) {
-      target.classList.remove("add-favorite");
+    if (target.classList.contains("fas")) {
+      // target.classList.remove("fas");
+      // target.classList.add("far");
+      $(this).toggleClass("far fas");
 
 
       for (let i = 0; i < favoriteStories.length; i++) {
@@ -102,13 +106,12 @@ $(async function () {
 
       for (let i = idMemory.length - 1; i >= 0; i--) {
         favoriteStories.splice(idMemory[i],1);
-        favoriteStoryIds.splice(idMemory[i],1);
+        // favoriteStoryIds.splice(idMemory[i],1);
       }
 
-      console.log("favoriteStories", favoriteStories);
-      console.log("favoriteStoryIds", favoriteStoryIds);
+    
 
-
+      generateStories();
       // for (let i = 0; i < favoriteStoryIds.length; i++) {
 
       //   if (favoriteStoryIds[i] == targetId) favoriteStoryIds.splice(i, 1);
@@ -119,12 +122,14 @@ $(async function () {
       // showFavoriteStories()
 
     } else {
-      target.classList.add("add-favorite");
+      // target.classList.remove("far");
+      // target.classList.add("fas");
+      $(this).toggleClass("far fas");
       for (let story of storyList.stories) {
 
         if (story.storyId === targetId) {
           currentUser.favorites.push(story);
-          currentUser.favoriteIds.push(targetId);
+          // currentUser.favoriteIds.push(targetId);
         }
 
         // const result = generateStoryHTML(story);
@@ -316,7 +321,7 @@ $(async function () {
    *  which will generate a storyListInstance. Then render it.
    */
 
-  //FIXME:
+  
   async function generateStories() {
     // get an instance of StoryList
     const storyListInstance = await StoryList.getStories();
@@ -342,12 +347,13 @@ $(async function () {
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
     const userFavorites = currentUser.favoriteIds;
+    let starType = isFavorite(story) ? "fas" : "far";
 
 
 
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      <p class="star"><i class="fas fa-star"></i></p>
+      <p class="star"><i class="${starType} fa-star"></i></p>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
@@ -357,11 +363,11 @@ $(async function () {
       </li>
     `);
 
-    const starIcon = storyMarkup[0].children[0];
+    // const starIcon = storyMarkup[0].children[0];
 
-    for (const id of userFavorites) {
-      if (id === story.storyId) starIcon.classList.add("add-favorite");
-    }
+    // for (const id of userFavorites) {
+    //   if (id === story.storyId) starIcon.classList.add("add-favorite");
+    // }
 
 
 
@@ -414,15 +420,43 @@ $(async function () {
   }
 
   //FIXME:
-  async function showFavoriteStories() {
-    $favArticles.empty()
-    // loop through all of our stories and generate HTML for them
-    console.log("showFavoriteStories", currentUser.favorites);
-    for (let story of currentUser.favorites) {
-      const result = generateStoryHTML(story);
-      $favArticles.append(result);
+    /* see if a specific story is in the user's list of favorites */
 
+    function isFavorite(story) {
+      let favStoryIds = new Set();
+      if (currentUser) {
+        favStoryIds = new Set(currentUser.favorites.map(obj => obj.storyId));
+      }
+      return favStoryIds.has(story.storyId);
     }
-  }
+
+    //FIXME:
+    function generateFaves() {
+      // empty out the list by default
+      $favArticles.empty();
+  
+      // if the user has no favorites
+      if (currentUser.favorites.length === 0) {
+        $favArticles.append("<h5>No favorites added!</h5>");
+      } else {
+        // for all of the user's favorites
+        for (let story of currentUser.favorites) {
+          // render each story in the list
+          let favoriteHTML = generateStoryHTML(story);
+          $favArticles.append(favoriteHTML);
+        }
+      }
+    }
+
+  // async function showFavoriteStories() {
+  //   $favArticles.empty()
+  //   // loop through all of our stories and generate HTML for them
+  //   console.log("showFavoriteStories", currentUser.favorites);
+  //   for (let story of currentUser.favorites) {
+  //     const result = generateStoryHTML(story);
+  //     $favArticles.append(result);
+
+  //   }
+  // }
 
 });
