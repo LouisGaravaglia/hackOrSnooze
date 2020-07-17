@@ -145,9 +145,11 @@ form > hr {
   cursor: pointer;
 }
 
+
 .star,
 .trash-can,
 .pencil {
+  display: inline;
   font-size: 0.75rem;
   margin: 0 2px;
   cursor: pointer;
@@ -155,6 +157,10 @@ form > hr {
 
 .trash-can:hover {
   color: crimson;
+}
+
+.star:hover {
+  color: rgb(199, 186, 1);
 }
 
 .pencil:hover {
@@ -182,7 +188,7 @@ form > hr {
 }
 
 .article-username {
-  display: block;
+  display: inline;
   margin-top: 5px;
   margin-left: 25px;
 }
