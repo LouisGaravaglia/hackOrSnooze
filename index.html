@@ -6,15 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Hack or Snooze</title>
-  <link rel="stylesheet"
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.css">  <link rel="stylesheet"
         href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
         integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
         crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
 <body>
-<nav>
+
+{% comment %} <nav>
   <b><a class="nav-link navbar-brand" href="#" id="nav-all">Hack or Snooze</a></b>
   <section class="main-nav-links hidden">
     <span>|</span>
@@ -31,7 +33,14 @@
   <a class="hidden" id="nav-logout" href="#">
     <small>(logout)</small>
   </a>
-</nav>
+</nav> {% endcomment %}
+
+  
+
+
+
+
+
 <section class="articles-container container">
   <form action="" class="hidden" id="submit-form">
     <div>
@@ -122,6 +131,7 @@
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
+
 <script src="https://unpkg.com/axios/dist/axios.js"></script>
 <script src="api-classes.js"></script>
 <script src="ui.js"></script>
