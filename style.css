@@ -78,7 +78,7 @@ nav {
 .container {
   display: flex;
   flex-direction: column;
-  align-self: center;
+  align-self: flex-start;
   background-color: #f6f6ef;
 }
 
@@ -233,11 +233,17 @@ form > hr {
   font-size: 1.2rem;
 } */
 
+#test {
+
+}
+
 #favorited-articles,
 #filtered-articles,
 #my-articles {
   list-style: none;
-  padding-left: 20px;
+  font-size: 80px;
+  
+  /* padding-left: 20px; */
 }
 
 .account-forms-container {
@@ -251,6 +257,7 @@ form > hr {
 #user-profile {
   padding: 10px 20px 20px;
   font-size: 0.9rem;
+  
 }
 
 #user-profile > * {
