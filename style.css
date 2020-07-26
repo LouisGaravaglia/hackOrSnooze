@@ -3,11 +3,11 @@
   
 } */
 
-body {
+/* body {
   margin: 8px 7.5vw;
 
   
-}
+} */
 /* 
 h1 {
   font-size: 1.1rem;
@@ -159,7 +159,7 @@ form > hr {
 .pencil {
   display: inline;
   font-size: 0.75rem;
-  margin: 0 18px;
+  margin: 0 10px;
   cursor: pointer;
   font-size: 18px;
 }
@@ -260,7 +260,7 @@ form > hr {
 
 /** responsive queries for tightening things up for mobile. */
 
-@media screen and (max-width: 576px) {
+/* @media screen and (max-width: 576px) {
   body {
     margin: 0;
   }
@@ -271,4 +271,4 @@ form > hr {
     max-width: 900px;
     margin: 8px auto;
   }
-}
+} */
